@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="../rawcanvas.js"></script>
+    <script src="../utils/frametimer.js"></script>
+</head>
+<body>
+    <canvas id="c" width="256" height="256">Your browser doesn't support canvas :(</canvas>
+    <script>
+var palette = (function () {
+var palette = new Uint8Array(256 * 4);
+
+for (var i=0; i<64; i++) {
+    palette[0 * 64 * 4 + i * 4 + 0] = i * 4;
+    palette[0 * 64 * 4 + i * 4 + 1] = 0;
+    palette[0 * 64 * 4 + i * 4 + 2] = 0;
+    palette[0 * 64 * 4 + i * 4 + 3] = 255;
+    palette[1 * 64 * 4 + i * 4 + 0] = 255;
+    palette[1 * 64 * 4 + i * 4 + 1] = i * 4;
+    palette[1 * 64 * 4 + i * 4 + 2] = 0;
+    palette[1 * 64 * 4 + i * 4 + 3] = 255;
+    palette[2 * 64 * 4 + i * 4 + 0] = 255;
+    palette[2 * 64 * 4 + i * 4 + 1] = 255;
+    palette[2 * 64 * 4 + i * 4 + 2] = i * 4;
+    palette[2 * 64 * 4 + i * 4 + 3] = 255;
+    palette[3 * 64 * 4 + i * 4 + 0] = 255;
+    palette[3 * 64 * 4 + i * 4 + 1] = 255;
+    palette[3 * 64 * 4 + i * 4 + 2] = 255;
+    palette[3 * 64 * 4 + i * 4 + 3] = 255;
+}
+
+return new Uint32Array(palette.buffer);
+
+}());
+
+function draw () {
+    var w = rc.width,
+        h = rc.height,
+        i, l;
+
+    ly = (h - 1) * w;
+    for (i=0; i<w; i++) {
+        fireData[ly + i] = ~~(Math.random() * 255);
+    }
+
+    for (i=0; i<fireData.length-w; i++) {
+        l = i % w ? -1 : 0;
+        r = i % w === w - 1 ? 0 : 1;
+        fireData[i] = Math.round((fireData[i + l] + (fireData[i + w] * 3) + fireData[i + r]) * .20);
+        if (fireData[i] > 4) fireData[i] -= 1;
+    }
+
+    for (i=0; i<fireData.length; i++) {
+        fd[i] = palette[fireData[i]];
+    }
+
+    rc.draw();
+}
+
+var c = document.getElementById('c'),
+    rc = new RawCanvas(c),
+    ft = new FrameTimer(draw),
+    fd = new Uint32Array(rc.data.buffer),
+    fireData = new Uint8Array(fd.length);
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="../rawcanvas.js"></script>
+    <script src="../utils/frametimer.js"></script>
+</head>
+<body>
+    <canvas id="c" width="64" height="64">Your browser doesn't support canvas :(</canvas>
+    <script>
+function draw () {
+    for (var i=0; i<r.data.length; i++) {
+        r.data[i] = ~~(Math.random() * 255);
+    }
+
+    r.draw();
+}
+
+var c = document.getElementById('c'),
+    r = new RawCanvas(c),
+    t = new FrameTimer(draw);
+    </script>
+</body>
+</html>
